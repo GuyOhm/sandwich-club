@@ -21,10 +21,10 @@ public class DetailActivity extends AppCompatActivity {
     private static final int DEFAULT_POSITION = -1;
 
     // Declare member variables
-    TextView mOrigin;
-    TextView mDescription;
-    TextView mIngredients;
-    TextView mAlsoKnownAs;
+    private TextView mOrigin;
+    private TextView mDescription;
+    private TextView mIngredients;
+    private TextView mAlsoKnownAs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
