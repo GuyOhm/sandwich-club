@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,29 +16,29 @@ import com.udacity.sandwichclub.utils.JsonUtils;
 
 import org.json.JSONException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
 
-    // Declare member variables
-    private TextView mOrigin;
-    private TextView mDescription;
-    private TextView mIngredients;
-    private TextView mAlsoKnownAs;
+    // Declare and bind member variables
+    @BindView(R.id.origin_tv) TextView mOrigin;
+    @BindView(R.id.description_tv) TextView mDescription;
+    @BindView(R.id.ingredients_tv) TextView mIngredients;
+    @BindView(R.id.also_known_tv) TextView mAlsoKnownAs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ButterKnife.bind(this);
 
-        // Reference our views
+        // Reference our view
         ImageView ingredientsIv = findViewById(R.id.image_iv);
-        mOrigin = findViewById(R.id.origin_tv);
-        mDescription = findViewById(R.id.description_tv);
-        mIngredients = findViewById(R.id.ingredients_tv);
-        mAlsoKnownAs = findViewById(R.id.also_known_tv);
 
         // Get Intent that started this activity
         Intent intent = getIntent();
@@ -74,6 +75,8 @@ public class DetailActivity extends AppCompatActivity {
         populateUI(sandwich);
         Picasso.with(this)
                 .load(sandwich.getImage())
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.mipmap.ic_launcher)
                 .into(ingredientsIv);
 
         setTitle(sandwich.getMainName());
@@ -85,16 +88,11 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void populateUI(Sandwich sandwich) {
-        // Get rid of [] from lists
-        String alsoKnownAs = sandwich.getAlsoKnownAs().toString()
-                .substring(1, sandwich.getAlsoKnownAs().toString().indexOf("]"));
-        String ingredients = sandwich.getIngredients().toString()
-                .substring(1, sandwich.getIngredients().toString().indexOf("]"));
         // Set text to views accordingly
-        mAlsoKnownAs.setText(alsoKnownAs);
+        mAlsoKnownAs.setText(TextUtils.join(", ", sandwich.getAlsoKnownAs()));
         mOrigin.setText(sandwich.getPlaceOfOrigin());
         mDescription.setText(sandwich.getDescription());
-        mIngredients.setText(ingredients);
+        mIngredients.setText(TextUtils.join(", ", sandwich.getIngredients()));
     }
 
     @Override
